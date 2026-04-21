@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "First feature for Markedsdrevet Vedlikehold: driftsleder registration form and confirmation screen for vedlikeholdsforesporsel, including personal request history."
 
+## Clarifications
+
+### Session 2026-04-21
+
+- Q: What identity source should be used for submitted requests in this phase? -> A: Use one fixed seeded driftsleder identity now; migrate to MSN Entra later.
+- Q: How should notification behave in this feature? -> A: Teams is the only external notification channel, but notification implementation is deferred to a separate feature; no separate in-app notification is needed for the submitting driftsleder.
+- Q: What format should onsket startperiode use? -> A: Date range with required start date and end date.
+- Q: Should type vedlikehold = annet require extra text? -> A: Yes, require short text detail.
+- Q: Which final status label is canonical? -> A: Besluttet.
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
@@ -47,8 +57,8 @@ Etter vellykket innsending skal driftsleder umiddelbart se en bekreftelsesside m
 **Acceptance Scenarios**:
 
 1. **Given** en nylig innsendt foresporsel, **When** bekreftelsessiden vises, **Then** skal den vise foresporsel-ID, stasjon/aggregat, onsket periode, varighet og status.
-2. **Given** bekreftelsessiden er vist, **When** driftsleder ser informasjonsteksten, **Then** skal det fremga at Energihandel er varslet og vil komme tilbake med forslag.
-3. **Given** en innsendt foresporsel med status "Ny", **When** driftsleder er pa bekreftelsessiden, **Then** kan foresporselen redigeres fram til den er godkjent.
+2. **Given** bekreftelsessiden er vist, **When** driftsleder ser oppsummeringen, **Then** ser driftsleder ingen separat in-app varslingskomponent i denne featureen.
+3. **Given** en innsendt foresporsel i denne feature-versjonen, **When** driftsleder er pa bekreftelsessiden, **Then** finnes ingen funksjon for redigering eller sletting av foresporselen.
 
 ---
 
@@ -73,6 +83,7 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 - Hva skjer dersom driftsleder bytter stasjon etter at aggregat er valgt?
 - Hvordan handteres innsending nar estimert varighet er 0 eller ikke gyldig tall?
 - Hva skjer dersom onsket periode er ufullstendig eller utenfor tillatt datointervall?
+- Hva skjer dersom startdato er senere enn sluttdato i onsket periode?
 - Hvordan vises brukerfeil nar flere obligatoriske felt mangler samtidig?
 - Hva vises pa bekreftelsessiden dersom brukeren ikke har tidligere foresporsler?
 - Hva skjer dersom lagring feiler i det brukeren sender inn skjemaet?
@@ -91,11 +102,16 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 - **FR-003**: Systemet MÅ validere obligatoriske felt før innsending og vise tydelig feltspesifikk feilinformasjon ved mangler.
 - **FR-004**: Systemet MÅ la driftsleder velge stasjon først, og deretter begrense aggregatvalg til aggregater som tilhorer valgt stasjon.
 - **FR-005**: Systemet MÅ bruke aggregatets registrerte MW-kapasitet som systemegenskap uten manuell input fra driftsleder.
-- **FR-006**: Systemet MÅ samle inn onsket startperiode, estimert varighet i dager, vedlikeholdstype, fleksibilitet, kritikalitet, avhengighet og valgfri kommentar.
+- **FR-006**: Systemet MÅ samle inn onsket startperiode som et datointervall med obligatorisk startdato og sluttdato, estimert varighet i dager, vedlikeholdstype, fleksibilitet, kritikalitet, avhengighet og valgfri kommentar.
+- **FR-006a**: Systemet MÅ validere at startdato er lik eller tidligere enn sluttdato for onsket startperiode.
+- **FR-006b**: Dersom type vedlikehold settes til "annet", MÅ systemet kreve en kort beskrivende fritekst for type vedlikehold.
 - **FR-007**: Ved innsending MÅ systemet opprette en ny vedlikeholdsforesporsel med unik foresporsel-ID, innsendingstidspunkt, innsendingens brukeridentitet og initial status "Ny".
+- **FR-007a**: I denne fasen MÅ innsendingens brukeridentitet settes til en fast seedet driftsleder-identitet; innlogging via MSN Entra er utenfor scope nå og innføres senere.
 - **FR-008**: Initial status "Ny" MÅ settes automatisk av systemet og kan ikke velges eller overstyres manuelt i denne featureen.
 - **FR-009**: Etter vellykket innsending MÅ systemet vise en bekreftelsesside med kompakt oppsummering av foresporsel-ID, stasjon/aggregat, onsket periode, varighet og status.
-- **FR-010**: Bekreftelsessiden MÅ vise en tydelig melding om at Energihandel er varslet og vil returnere forslag til stoppvindu.
+- **FR-010**: Bekreftelsessiden MÅ ikke kreve eller vise en separat in-app varslingskomponent for den driftsleder som nettopp sendte inn foresporselen.
+- **FR-010a**: Ekstern varslingskanal for senere notifiseringsfeature er Teams-only.
+- **FR-010b**: Implementasjon av faktisk ekstern Teams-varsling er utenfor scope for denne featureen.
 - **FR-011**: Bekreftelsessiden MÅ ikke tilby redigering eller sletting av innsendt foresporsel.
 - **FR-012**: Bekreftelsessiden MÅ vise historikk over innlogget driftsleders egne foresporsler med stasjon, aggregat, type vedlikehold, tid siden innsending og status.
 - **FR-013**: Historikkliste MÅ kun inneholde foresporsler opprettet av innlogget driftsleder.
@@ -104,7 +120,7 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 
 ### Key Entities *(include if feature involves data)*
 
-- **Vedlikeholdsforesporsel**: Kjerneobjektet som representerer en innsending fra driftsleder med feltene foresporsel-ID, innsendingstidspunkt, brukeridentitet, stasjon, aggregat, aggregatkapasitet (MW), onsket startperiode, estimert varighet (dager), type vedlikehold, fleksibilitet, kritikalitet, avhengighet, kommentar (valgfri) og status.
+- **Vedlikeholdsforesporsel**: Kjerneobjektet som representerer en innsending fra driftsleder med feltene foresporsel-ID, innsendingstidspunkt, brukeridentitet, stasjon, aggregat, aggregatkapasitet (MW), onsket startperiode (startdato + sluttdato), estimert varighet (dager), type vedlikehold, fleksibilitet, kritikalitet, avhengighet, kommentar (valgfri) og status.
 - **Stasjon**: Kraftstasjon som eier ett eller flere aggregater og fungerer som overordnet valg i skjemaet.
 - **Aggregat**: Produksjonsenhet tilknyttet en stasjon; brukes for identifikasjon av stoppobjekt og tilhorende MW-kapasitet.
 - **Brukerhistorikkvisning**: Visningssett av tidligere vedlikeholdsforesporsler filtrert pa innlogget driftsleder.
@@ -125,8 +141,11 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 
 ## Assumptions
 
-- Innlogget brukeridentitet er tilgjengelig i losningen slik at "mine foresporsler" kan filtreres uten at denne featureen bygger egen autentiseringsflyt.
+- En fast seedet driftsleder-identitet brukes midlertidig for innsending og filtrering av "mine foresporsler" i denne fasen.
 - Liste over stasjoner og tilhorende aggregater finnes som tilgjengelig grunnlag i systemet ved registreringstidspunkt.
-- Varsling til Energihandel trigges ved innsending, men kanal og teknisk implementasjon handteres utenfor denne featureen.
+- Ekstern varsling til Energihandel skal pa sikt ga via Teams-only, men faktisk varslingsimplementasjon handteres i en separat notifiseringsfeature.
+- Ingen separat in-app varsling kreves for driftsleder som nettopp har sendt inn foresporselen.
+- Statusbetegnelsen "Besluttet" er kanonisk slutstatus i denne repoens spesifikasjoner.
 - Registreringsskjema og bekreftelsesside er primart designet for desktopbruk i kontor-/moteromskontekst, med grunnleggende responsiv oppforsel.
-- Endring av status etter "Godkjent" ligger utenfor denne leveransen.
+- Integrasjon med MSN Entra for autentisering og brukeridentitet er planlagt for senere fase.
+- Endring av status etter initial "Ny" ligger utenfor denne leveransen.
