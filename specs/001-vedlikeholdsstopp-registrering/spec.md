@@ -48,13 +48,13 @@ Etter vellykket innsending skal driftsleder umiddelbart se en bekreftelsesside m
 
 1. **Given** en nylig innsendt foresporsel, **When** bekreftelsessiden vises, **Then** skal den vise foresporsel-ID, stasjon/aggregat, onsket periode, varighet og status.
 2. **Given** bekreftelsessiden er vist, **When** driftsleder ser informasjonsteksten, **Then** skal det fremga at Energihandel er varslet og vil komme tilbake med forslag.
-3. **Given** en innsendt foresporsel i denne feature-versjonen, **When** driftsleder er pa bekreftelsessiden, **Then** finnes ingen funksjon for redigering eller sletting av foresporselen.
+3. **Given** en innsendt foresporsel med status "Ny", **When** driftsleder er pa bekreftelsessiden, **Then** kan foresporselen redigeres fram til den er godkjent.
 
 ---
 
 ### User Story 3 - Folg egne foresporsler i historikk (Priority: P3)
 
-Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsforesporsler med status, slik at vedkommende kan folge progresjon uten telefon eller e-post.
+Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsforesporsler med status, slik at vedkommende kan folge progresjon uten a matte ringe fysisk (eller sende e-post) for statusoppdatering.
 
 **Why this priority**: Historikken reduserer operativ friksjon og avklaringsbehov, men krever at registrering og bekreftelse allerede fungerer.
 
@@ -129,4 +129,4 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 - Liste over stasjoner og tilhorende aggregater finnes som tilgjengelig grunnlag i systemet ved registreringstidspunkt.
 - Varsling til Energihandel trigges ved innsending, men kanal og teknisk implementasjon handteres utenfor denne featureen.
 - Registreringsskjema og bekreftelsesside er primart designet for desktopbruk i kontor-/moteromskontekst, med grunnleggende responsiv oppforsel.
-- Endring av status etter initial "Ny" skjer i senere features og ligger utenfor denne leveransen.
+- Endring av status etter "Godkjent" ligger utenfor denne leveransen.
