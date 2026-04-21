@@ -1,0 +1,24 @@
+---
+description: Project-wide rules for SDD Workshop
+alwaysApply: true
+---
+# SDD Workshop
+Full-stack workshop project built using Spec-Driven Development.
+## Tech Stack
+- Frontend: React 18 + TypeScript + Vite
+- Styling: Tailwind CSS (utility-first, use Tailwind classes only)
+- Backend: Python 3.10+ with FastAPI
+- Database: SQLite (file-based, use sqlite3 standard library)
+- API: REST endpoints under /api/ prefix
+## Conventions
+- UI text: Norwegian (Bokmål)
+- Code and comments: English
+- File naming: kebab-case for files, PascalCase for React components
+- One React component per file
+- All API endpoints start with /api/
+- Frontend proxies /api/* to backend via Vite config
+## Quality
+- Workshop prototype — working beats polished
+- No authentication required
+- No tests required
+- Clear, readable code
