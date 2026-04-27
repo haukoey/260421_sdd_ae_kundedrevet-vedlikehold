@@ -31,4 +31,4 @@
 
 ## Notes
 
-- Initial validation pass completed without unresolved clarifications.
+- Validation pass updated 2026-04-27 after adding requirement for Fabric status sync when case changes from "Ny" to "Under behandling".

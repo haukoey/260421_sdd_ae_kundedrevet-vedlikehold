@@ -34,7 +34,7 @@ Energihandel-saksbehandler skal kunne apne en "Ny" sak, lese hele foresporselen,
 **Acceptance Scenarios**:
 
 1. **Given** en sak i status "Ny", **When** Energihandel apner detaljvisningen, **Then** vises alle registrerte felt fra foresporselen i lesevisning.
-2. **Given** en sak i status "Ny", **When** saksbehandler klikker "Start behandling", **Then** endres status til "Under behandling" og saken far saksbehandler som eier.
+2. **Given** en sak i status "Ny", **When** saksbehandler klikker "Start behandling", **Then** endres status til "Under behandling", saken far saksbehandler som eier, og oppdatert status synkroniseres til Fabric.
 3. **Given** en sak er laset til en eier, **When** en annen Energihandel-bruker forsoker a redigere eller sende forslag, **Then** blokkeres handlingen og eierinformasjon vises.
 
 ---
@@ -76,6 +76,7 @@ Energihandel-saksbehandler skal kunne registrere rangerte forslag for en sak und
 - **FR-005**: Ved apning av en "Ny" sak MA systemet vise full detaljvisning av alle felt fra opprinnelig vedlikeholdsforesporsel.
 - **FR-006**: Systemet MA tilby handlingen "Start behandling" for saker i status "Ny".
 - **FR-007**: Nar "Start behandling" utfores MA systemet sette status til "Under behandling" og knytte saken til aktuell Energihandel-bruker som eier.
+- **FR-007a**: Nar status endres fra "Ny" til "Under behandling" MA den oppdaterte statusen lagres i Fabric for samme vedlikeholdsforesporsel.
 - **FR-008**: For saker i status "Under behandling" MA systemet la eier registrere, redigere og slette forslag fram til sending.
 - **FR-009**: Hvert forslag MA inneholde startdato, sluttdato, estimert inntektstap og vannforingsprognose.
 - **FR-010**: Systemet MA tildele rangering til forslag basert pa rekkefolgen de registreres i.
@@ -90,7 +91,7 @@ Energihandel-saksbehandler skal kunne registrere rangerte forslag for en sak und
 
 ### Key Entities *(include if feature involves data)*
 
-- **Vedlikeholdsforesporsel**: Sak sendt inn av driftsleder, med statuslivslop, foresporselsdata og kobling til eventuell Energihandel-eier.
+- **Vedlikeholdsforesporsel**: Sak sendt inn av driftsleder, med statuslivslop, foresporselsdata og kobling til eventuell Energihandel-eier, der statusoppdateringer fra Energihandel speiles til Fabric.
 - **Energihandel-innboksvisning**: Prioritert visning av aktive saker med et avgrenset sett felter for rask triagering.
 - **Sakslas**: Regelsett som knytter en sak i "Under behandling" til en eier og blokkerer samtidige endringer fra andre brukere.
 - **Forslag**: Energihandels vedlikeholdsvindu med start/slutt, estimert inntektstap, vannforingsprognose, rangering og eventuell begrunnelse.
@@ -111,3 +112,4 @@ Energihandel-saksbehandler skal kunne registrere rangerte forslag for en sak und
 - Driftsleders mottak, visning og beslutning av forslag handteres i en senere feature.
 - Inntektstap og vannforingsprognose registreres manuelt av Energihandel basert pa analyser utenfor produktet.
 - Det finnes ingen timeout eller manuell opplasning av las i denne leveransen; las beholdes til saken sendes til drift.
+- Fabric er tilgjengelig for lagring av statusendringer som oppstar nar Energihandel starter behandling.
