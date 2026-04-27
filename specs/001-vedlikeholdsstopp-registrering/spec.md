@@ -15,6 +15,10 @@
 - Q: Should type vedlikehold = annet require extra text? -> A: Yes, require short text detail.
 - Q: Which final status label is canonical? -> A: Besluttet.
 
+### Session 2026-04-27
+
+- Q: Hvor skal foresporsel om vedlikeholdsstopp lagres? -> A: Vedlikeholdsstopp-foresporsler skal lagres i Fabric.
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
@@ -107,6 +111,7 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 - **FR-006b**: Dersom type vedlikehold settes til "annet", MÅ systemet kreve en kort beskrivende fritekst for type vedlikehold.
 - **FR-007**: Ved innsending MÅ systemet opprette en ny vedlikeholdsforesporsel med unik foresporsel-ID, innsendingstidspunkt, innsendingens brukeridentitet og initial status "Ny".
 - **FR-007a**: I denne fasen MÅ innsendingens brukeridentitet settes til en fast seedet driftsleder-identitet; innlogging via MSN Entra er utenfor scope nå og innføres senere.
+- **FR-007b**: Nye vedlikeholdsforesporsler MÅ persisteres i Fabric som autoritativ datalagring for denne featureen.
 - **FR-008**: Initial status "Ny" MÅ settes automatisk av systemet og kan ikke velges eller overstyres manuelt i denne featureen.
 - **FR-009**: Etter vellykket innsending MÅ systemet vise en bekreftelsesside med kompakt oppsummering av foresporsel-ID, stasjon/aggregat, onsket periode, varighet og status.
 - **FR-010**: Bekreftelsessiden MÅ ikke kreve eller vise en separat in-app varslingskomponent for den driftsleder som nettopp sendte inn foresporselen.
@@ -116,11 +121,11 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 - **FR-012**: Bekreftelsessiden MÅ vise historikk over innlogget driftsleders egne foresporsler med stasjon, aggregat, type vedlikehold, tid siden innsending og status.
 - **FR-013**: Historikkliste MÅ kun inneholde foresporsler opprettet av innlogget driftsleder.
 - **FR-014**: Systemet MÅ støtte visning av statusverdier for hele livslopet i historikken: "Ny", "Under behandling", "Alternativer sendt", og "Besluttet".
-- **FR-015**: Feature-scope MÅ ekskludere Energihandels analyseflyt, forslagshandtering, beslutningsskjerm, redigering/sletting, vedlegg og eksterne integrasjoner.
+- **FR-015**: Feature-scope MÅ ekskludere Energihandels analyseflyt, forslagshandtering, beslutningsskjerm, redigering/sletting, vedlegg og andre eksterne integrasjoner utover nödvendig lagring i Fabric.
 
 ### Key Entities *(include if feature involves data)*
 
-- **Vedlikeholdsforesporsel**: Kjerneobjektet som representerer en innsending fra driftsleder med feltene foresporsel-ID, innsendingstidspunkt, brukeridentitet, stasjon, aggregat, aggregatkapasitet (MW), onsket startperiode (startdato + sluttdato), estimert varighet (dager), type vedlikehold, fleksibilitet, kritikalitet, avhengighet, kommentar (valgfri) og status.
+- **Vedlikeholdsforesporsel**: Kjerneobjektet som representerer en innsending fra driftsleder med feltene foresporsel-ID, innsendingstidspunkt, brukeridentitet, stasjon, aggregat, aggregatkapasitet (MW), onsket startperiode (startdato + sluttdato), estimert varighet (dager), type vedlikehold, fleksibilitet, kritikalitet, avhengighet, kommentar (valgfri) og status. Objektet persisteres i Fabric.
 - **Stasjon**: Kraftstasjon som eier ett eller flere aggregater og fungerer som overordnet valg i skjemaet.
 - **Aggregat**: Produksjonsenhet tilknyttet en stasjon; brukes for identifikasjon av stoppobjekt og tilhorende MW-kapasitet.
 - **Brukerhistorikkvisning**: Visningssett av tidligere vedlikeholdsforesporsler filtrert pa innlogget driftsleder.
@@ -149,3 +154,4 @@ Driftsleder skal kunne se en personlig historikkliste over egne vedlikeholdsfore
 - Registreringsskjema og bekreftelsesside er primart designet for desktopbruk i kontor-/moteromskontekst, med grunnleggende responsiv oppforsel.
 - Integrasjon med MSN Entra for autentisering og brukeridentitet er planlagt for senere fase.
 - Endring av status etter initial "Ny" ligger utenfor denne leveransen.
+- Fabric er tilgjengelig som lagringsplattform for vedlikeholdsstopp-foresporsler i denne featureen.
